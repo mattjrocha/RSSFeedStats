@@ -9,7 +9,7 @@ namespace RSSFeedStats.RSS
      * FeedStats class takes a sitename and siteurl and returns the inactivity from that date.
     */
     [TestFixture]
-    public class FeedStats
+    public class FeedStats : IFeedStats
     {
         public string SiteName;
         public string SiteURL;
@@ -38,7 +38,7 @@ namespace RSSFeedStats.RSS
          * days since last active feed.
          */
         [Test]
-        private string SetInactivity()
+        public string SetInactivity()
         {
             SyndicationFeed RSSFeed;
             try
@@ -63,7 +63,7 @@ namespace RSSFeedStats.RSS
                     return "N/A";
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string exception = ex.Message.ToString();
                 return "N/A";//error 404
@@ -75,7 +75,6 @@ namespace RSSFeedStats.RSS
          * Finds the newest published article for that feed
          * Returns how many days from current date.
          */
-        [Test]
         private int GetInactivity(SyndicationFeed feed)
         {
             int lowInactivity = 999999;//certainly before internet
