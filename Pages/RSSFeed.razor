@@ -1,0 +1,86 @@
+﻿@page "/RSSFeed"
+@using System.Collections.Generic
+@using System.Threading.Tasks;
+@using RSS;
+<!-- This is the main user interface of the webapp-->
+<hr>
+<h3>RSS Podcast Feed</h3>
+<!-- Uses the Razor .Net 5 Grid to display two grids for each RSS Feed Category-->
+<Grid Items="@PodcastFeedStats" PageSize="5">
+    <GridHeader>
+        <th>Site Title</th>
+        <th>RSS URL</th>
+        <th>Inactivity(Days)</th>
+    </GridHeader>
+    <GridRow>
+        <td>@context.SiteName</td>
+        <td>@context.SiteURL</td>
+        <td>@context.SiteInactivity</td>
+    </GridRow>
+</Grid>
+<hr>
+<h3>RSS News Feed</h3>
+
+<Grid Items="@NewsFeedStats" PageSize="5">
+    <GridHeader>
+        <th>Site Title</th>
+        <th>RSS URL</th>
+        <th>Inactivity(Days)</th>
+    </GridHeader>
+    <GridRow>
+        <td>@context.SiteName</td>
+        <td>@context.SiteURL</td>
+        <td>@context.SiteInactivity</td>
+    </GridRow>
+</Grid>
+
+
+
+@code {
+    FeedStats[] NewsFeedStats;
+    FeedStats[] PodcastFeedStats;
+    /* Two dictionaries hold the RSS feeds that will be used to find their latest activity
+    * Two Categories will be used
+    */
+    private static Dictionary<string, string> RSSNewsFeeds = new Dictionary<string, string>{
+    {"CNN", "http://rss.cnn.com/rss/cnn_topstories.rss"},
+    {"New York Times", "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"},
+    {"Fox News", "http://feeds.foxnews.com/foxnews/latest"},
+    {"USA Today", "http://rssfeeds.usatoday.com/UsatodaycomNation-TopStories"},
+    {"Life Hacker", "https://lifehacker.com/rss"},
+    {"Reuters", "https://www.reutersagency.com/feed/?taxonomy=best-topics&post_type=best"},
+    {"Politico", "http://www.politico.com/rss/politicopicks.xml"},
+    {"Yahoo News", "https://www.yahoo.com/news/rss"},
+    {"NPR", "https://feeds.npr.org/1001/rss.xml"},
+    {"Los Angeles Times", "https://www.latimes.com/local/rss2.0.xml"}
+};
+    private static Dictionary<string, string> RSSPodCastFeeds = new Dictionary<string, string>{
+    {"The Apology Line", "https://rss.art19.com/apology-line"},
+    {"The Daily by The New York Times", "http://rss.art19.com/the-daily"},
+    {"The Bible in a Year", "https://feeds.fireside.fm/bibleinayear/rss"},
+    {"Crime Junkie", "https://feeds.megaphone.fm/ADL9840290619"},
+    {"The Experiment", "http://feeds.wnyc.org/experiment_podcast"},
+    {"The Dan Bongino Show", "https://feeds.megaphone.fm/WWO3519750118"},
+    {"Unraveled: Long Island Serial Killer", "https://rss.acast.com/unraveled"},
+    {"Morbid: A True Crime Podcast", "https://audioboom.com/channels/4997220.rss"},
+    {"Dateline NBC", "https://podcastfeeds.nbcnews.com/dateline-nbc"},
+    {"The Lincoln Project", "https://lincolnproject.libsyn.com/rss"}
+};
+
+    protected async override Task OnInitializedAsync()
+    {
+        NewsFeedStats = new FeedStats[RSSNewsFeeds.Count];
+        for (int i = 0; i < RSSNewsFeeds.Count; i++)
+        {
+            NewsFeedStats[i] = new FeedStats(RSSNewsFeeds.Keys.ElementAt(i), RSSNewsFeeds.Values.ElementAt(i));
+        }
+        PodcastFeedStats = new FeedStats[RSSPodCastFeeds.Count];
+        for (int i = 0; i < RSSPodCastFeeds.Count; i++)
+        {
+            PodcastFeedStats[i] = new FeedStats(RSSPodCastFeeds.Keys.ElementAt(i), RSSPodCastFeeds.Values.ElementAt(i));
+        }
+
+        await Task.Delay(1);
+    }
+
+}
